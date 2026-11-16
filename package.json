@@ -14,7 +14,7 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "test": "vitest run",
@@ -34,6 +34,6 @@
     "ora": "^8.1.1"
   },
   "devDependencies": {
-    "vitest": "^2.1.9"
+    "vitest": "^4.1.12"
   }
 }

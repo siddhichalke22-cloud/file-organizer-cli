@@ -2,12 +2,14 @@
 import { Command, InvalidArgumentError } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
+import { createRequire } from 'node:module';
 import { organizeDirectory } from '../src/organizer.js';
 import { undoLastOperation } from '../src/undo.js';
 import { loadCustomCategories } from '../src/utils.js';
 import { createCategoryMapper } from '../src/categoryMapper.js';
 
 const program = new Command();
+const { version } = createRequire(import.meta.url)('../package.json');
 
 function requireDirectory(value) {
   if (!value) throw new InvalidArgumentError('A directory path is required.');
@@ -37,7 +39,7 @@ function displaySummary(result, dryRun) {
 program
   .name('file-organizer')
   .description('Organize files in one directory by extension. Subdirectories are never scanned.')
-  .version('1.0.0')
+  .version(version)
   .argument('[directory]', 'directory whose immediate files should be organized', requireDirectory)
   .option('--dry-run', 'preview file moves without changing files')
   .option('--undo', 'undo the most recent organization operation')

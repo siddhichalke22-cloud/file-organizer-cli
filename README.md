@@ -14,7 +14,7 @@ A safe, non-recursive command-line tool that organizes the files immediately ins
 
 ## Requirements and installation
 
-Node.js 18 or newer is required.
+Node.js 20 or newer is required.
 
 ```sh
 npm install -g file-organizer-cli

@@ -46,14 +46,19 @@ export async function moveFileSafely(sourcePath, destinationPath, expectedIdenti
     destinationCreated = true;
     destinationIdentity = await destination.stat();
 
-    const input = source.createReadStream({ autoClose: false });
-    const output = destination.createWriteStream({ autoClose: false });
-    await new Promise((resolve, reject) => {
-      input.on('error', reject);
-      output.on('error', reject);
-      output.on('finish', resolve);
-      input.pipe(output);
-    });
+    const buffer = Buffer.alloc(64 * 1024);
+    let position = 0;
+    while (true) {
+      const { bytesRead } = await source.read(buffer, 0, buffer.length, position);
+      if (bytesRead === 0) break;
+
+      let written = 0;
+      while (written < bytesRead) {
+        const result = await destination.write(buffer, written, bytesRead - written, position + written);
+        written += result.bytesWritten;
+      }
+      position += bytesRead;
+    }
 
     await source.close();
     source = undefined;
@@ -68,7 +73,11 @@ export async function moveFileSafely(sourcePath, destinationPath, expectedIdenti
     if (destinationCreated) {
       try {
         const current = await lstat(destinationPath);
-        if (current.dev === destinationIdentity.dev && current.ino === destinationIdentity.ino) {
+        if (
+          destinationIdentity &&
+          current.dev === destinationIdentity.dev &&
+          current.ino === destinationIdentity.ino
+        ) {
           await unlink(destinationPath);
         }
       } catch (cleanupError) {

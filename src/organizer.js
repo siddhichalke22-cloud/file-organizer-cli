@@ -40,8 +40,11 @@ export async function organizeDirectory(
   if (resolvedDirectory === path.parse(resolvedDirectory).root) {
     throw new Error('For safety, a filesystem root cannot be organized.');
   }
-  if (protectedDirectory && isWithin(path.resolve(protectedDirectory), resolvedDirectory)) {
-    throw new Error('For safety, the file-organizer-cli installation directory cannot be organized.');
+  if (protectedDirectory) {
+    const resolvedProtectedDirectory = await realpath(protectedDirectory);
+    if (isWithin(resolvedProtectedDirectory, resolvedDirectory)) {
+      throw new Error('For safety, the file-organizer-cli installation directory cannot be organized.');
+    }
   }
 
   const mapper = createCategoryMapper(customCategories);

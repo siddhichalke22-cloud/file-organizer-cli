@@ -1,6 +1,6 @@
 import { lstat, mkdir } from 'node:fs/promises';
 import path from 'node:path';
-import { findAvailableDestination, moveFileSafely } from './fileMover.js';
+import { moveFileSafely } from './fileMover.js';
 import { getDefaultHistoryPath, readHistory, writeHistory } from './historyManager.js';
 
 export async function undoLastOperation({ historyPath = getDefaultHistoryPath() } = {}) {

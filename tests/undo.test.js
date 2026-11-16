@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, unlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -43,5 +43,10 @@ describe('undoLastOperation', () => {
 
     expect(result.skipped).toBe(1);
     expect(await readFile(originalPath, 'utf8')).toBe('keep this');
+
+    await unlink(originalPath);
+    const retryResult = await undoLastOperation({ historyPath });
+    expect(retryResult.restored).toBe(1);
+    expect(await readFile(originalPath, 'utf8')).toBe('audio');
   });
 });

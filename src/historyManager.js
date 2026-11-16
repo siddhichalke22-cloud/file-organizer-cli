@@ -1,4 +1,4 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { randomUUID } from 'node:crypto';
@@ -37,26 +37,7 @@ export async function writeHistory(history, historyPath = getDefaultHistoryPath(
     });
     await rename(temporaryPath, historyPath);
   } catch (error) {
+    await unlink(temporaryPath).catch(() => {});
     throw new Error(`Cannot ${action} organization history: ${error.message}`, { cause: error });
   }
-}
-
-export async function removeLatestHistory(historyPath = getDefaultHistoryPath()) {
-  const history = await readHistory(historyPath);
-  const record = history.pop();
-  if (!record) return undefined;
-
-  await mkdir(path.dirname(historyPath), { recursive: true, mode: 0o700 });
-  const temporaryPath = `${historyPath}.${randomUUID()}.tmp`;
-  try {
-    await writeFile(temporaryPath, `${JSON.stringify(history, null, 2)}\n`, {
-      encoding: 'utf8',
-      mode: 0o600,
-      flag: 'wx'
-    });
-    await rename(temporaryPath, historyPath);
-  } catch (error) {
-    throw new Error(`Cannot update organization history: ${error.message}`, { cause: error });
-  }
-  return record;
 }
