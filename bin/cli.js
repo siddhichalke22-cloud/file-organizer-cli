@@ -55,8 +55,12 @@ program
 
     if (options.undo) {
       const spinner = ora('Undoing the most recent organization...').start();
-      const result = await undoLastOperation();
-      spinner.stop();
+      let result;
+      try {
+        result = await undoLastOperation();
+      } finally {
+        spinner.stop();
+      }
       console.log(chalk.green(`Undo completed: ${result.restored} restored, ${result.skipped} skipped, ${result.failed} failed.`));
       if (result.errors.length) displayErrors(result.errors);
       return;
@@ -74,11 +78,15 @@ program
     console.log(`Scanning directory: ${directory}`);
 
     const spinner = ora(options.dryRun ? 'Previewing files...' : 'Organizing files...').start();
-    const result = await organizeDirectory(directory, {
-      dryRun: options.dryRun,
-      customCategories
-    });
-    spinner.stop();
+    let result;
+    try {
+      result = await organizeDirectory(directory, {
+        dryRun: options.dryRun,
+        customCategories
+      });
+    } finally {
+      spinner.stop();
+    }
 
     for (const category of Object.keys(mapper.categories)) {
       if (result.foldersCreated.includes(category)) {

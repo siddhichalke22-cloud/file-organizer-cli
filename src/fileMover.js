@@ -64,6 +64,11 @@ export async function moveFileSafely(sourcePath, destinationPath, expectedIdenti
     source = undefined;
     await destination.close();
     destination = undefined;
+
+    const currentSource = await lstat(sourcePath);
+    if (currentSource.dev !== sourceStats.dev || currentSource.ino !== sourceStats.ino) {
+      throw new Error('Source file changed while it was being moved');
+    }
     await unlink(sourcePath);
     return true;
   } catch (error) {
