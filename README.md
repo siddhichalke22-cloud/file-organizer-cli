@@ -1,4 +1,4 @@
-# file-organizer-cli
+# safe-file-organizer-cli
 
 A safe, non-recursive command-line tool that organizes the files immediately inside a directory into folders based on their extensions. It never scans child directories, overwrites a destination file, or runs without an explicitly supplied target (except for `--undo`).
 
@@ -17,14 +17,14 @@ A safe, non-recursive command-line tool that organizes the files immediately ins
 Node.js 20 or newer is required.
 
 ```sh
-npm install -g file-organizer-cli
+npm install -g safe-file-organizer-cli
 file-organizer ./Downloads
 ```
 
 Or run it without a global install:
 
 ```sh
-npx file-organizer-cli ./Downloads
+npx safe-file-organizer-cli ./Downloads
 ```
 
 ## Commands

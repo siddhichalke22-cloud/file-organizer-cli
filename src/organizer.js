@@ -43,7 +43,7 @@ export async function organizeDirectory(
   if (protectedDirectory) {
     const resolvedProtectedDirectory = await realpath(protectedDirectory);
     if (isWithin(resolvedProtectedDirectory, resolvedDirectory)) {
-      throw new Error('For safety, the file-organizer-cli installation directory cannot be organized.');
+      throw new Error('For safety, the package installation directory cannot be organized.');
     }
   }
 

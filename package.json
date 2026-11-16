@@ -1,10 +1,10 @@
 {
-  "name": "file-organizer-cli",
+  "name": "safe-file-organizer-cli",
   "version": "1.0.0",
   "description": "A safe command-line tool for organizing files by type",
   "type": "module",
   "bin": {
-    "file-organizer": "./bin/cli.js"
+    "file-organizer": "bin/cli.js"
   },
   "files": [
     "bin/",
